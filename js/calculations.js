@@ -1,54 +1,29 @@
-// ==========================================
-// CONFIGURACIÓN
-// ==========================================
-
 const META_HORAS = 180;
 const META_MINUTOS = META_HORAS * 60;
 
-
-// ==========================================
-// CONVERTIR HORA A MINUTOS
-// ==========================================
-
-/**
- * Convierte una hora en formato HH:MM
- * a minutos desde las 00:00.
- *
- * Ejemplo:
- * "08:30" -> 510
- */
 function horaAMinutos(hora) {
-
     if (!hora || !hora.includes(":")) {
         return 0;
     }
 
-    const [horas, minutos] = hora.split(":").map(Number);
+    const [horas, minutos] =
+        hora.split(":").map(Number);
 
     return (horas * 60) + minutos;
 }
 
+function calcularMinutos(
+    entrada,
+    salida
+) {
+    const minutosEntrada =
+        horaAMinutos(entrada);
 
-// ==========================================
-// CALCULAR DURACIÓN DE UNA JORNADA
-// ==========================================
+    const minutosSalida =
+        horaAMinutos(salida);
 
-/**
- * Calcula los minutos transcurridos entre
- * la hora de entrada y la hora de salida.
- *
- * Ejemplo:
- * 08:00 - 17:00 = 540 minutos
- *
- * Retorna -1 si la salida es anterior
- * o igual a la entrada.
- */
-function calcularMinutos(entrada, salida) {
-
-    const minutosEntrada = horaAMinutos(entrada);
-    const minutosSalida = horaAMinutos(salida);
-
-    const diferencia = minutosSalida - minutosEntrada;
+    const diferencia =
+        minutosSalida - minutosEntrada;
 
     if (diferencia <= 0) {
         return -1;
@@ -57,40 +32,23 @@ function calcularMinutos(entrada, salida) {
     return diferencia;
 }
 
-
-// ==========================================
-// CALCULAR JORNADA CON DESCANSO
-// ==========================================
-
-/**
- * Calcula los minutos reales trabajados
- * descontando el descanso.
- *
- * descansoMinutos debe ser un número.
- *
- * Ejemplo:
- *
- * 08:00 - 17:00 = 540 minutos
- * descanso = 60
- *
- * resultado = 480 minutos = 8 horas
- */
 function calcularMinutosTrabajados(
     entrada,
     salida,
     descansoMinutos = 0
 ) {
-
-    const minutosJornada = calcularMinutos(
-        entrada,
-        salida
-    );
+    const minutosJornada =
+        calcularMinutos(
+            entrada,
+            salida
+        );
 
     if (minutosJornada <= 0) {
         return -1;
     }
 
-    const descanso = Number(descansoMinutos) || 0;
+    const descanso =
+        Number(descansoMinutos) || 0;
 
     if (descanso < 0) {
         return -1;
@@ -103,30 +61,18 @@ function calcularMinutosTrabajados(
     return minutosJornada - descanso;
 }
 
-
-// ==========================================
-// CONVERTIR DURACIÓN HH:MM A MINUTOS
-// ==========================================
-
-/**
- * Esta función sirve principalmente para
- * convertir el campo de descanso.
- *
- * Ejemplo:
- *
- * "01:00" -> 60
- * "00:30" -> 30
- * "01:15" -> 75
- */
 function duracionAMinutos(duracion) {
-
-    if (!duracion || !duracion.includes(":")) {
+    if (
+        !duracion ||
+        !duracion.includes(":")
+    ) {
         return 0;
     }
 
-    const [horas, minutos] = duracion
-        .split(":")
-        .map(Number);
+    const [horas, minutos] =
+        duracion
+            .split(":")
+            .map(Number);
 
     if (
         Number.isNaN(horas) ||
@@ -138,81 +84,51 @@ function duracionAMinutos(duracion) {
     return (horas * 60) + minutos;
 }
 
-
-// ==========================================
-// FORMATEAR MINUTOS
-// ==========================================
-
-/**
- * Convierte minutos a un formato fácil
- * de leer.
- *
- * Ejemplos:
- *
- * 60  -> "1 h"
- * 90  -> "1 h 30 min"
- * 270 -> "4 h 30 min"
- */
 function formatearTiempo(totalMinutos) {
-
-    let minutos = Number(totalMinutos) || 0;
+    let minutos =
+        Number(totalMinutos) || 0;
 
     if (minutos < 0) {
         minutos = 0;
     }
 
-    const horas = Math.floor(minutos / 60);
+    const horas =
+        Math.floor(
+            minutos / 60
+        );
 
-    const minutosRestantes = minutos % 60;
-
+    const minutosRestantes =
+        minutos % 60;
 
     if (horas === 0) {
         return `${minutosRestantes} min`;
     }
 
-
     if (minutosRestantes === 0) {
         return `${horas} h`;
     }
 
-
     return `${horas} h ${minutosRestantes} min`;
 }
 
-
-// ==========================================
-// CALCULAR HORAS RESTANTES
-// ==========================================
-
-/**
- * Calcula cuántos minutos faltan
- * para alcanzar las 180 horas.
- */
-function calcularRestantes(minutosCompletados) {
-
+function calcularRestantes(
+    minutosCompletados
+) {
     const completados =
         Number(minutosCompletados) || 0;
 
     const restantes =
         META_MINUTOS - completados;
 
-    return Math.max(restantes, 0);
+    return Math.max(
+        restantes,
+        0
+    );
 }
 
-
-// ==========================================
-// CALCULAR PORCENTAJE
-// ==========================================
-
-/**
- * Calcula el porcentaje completado
- * respecto a las 180 horas.
- *
- * Devuelve un número con máximo
- * dos decimales.
- */
-function calcularPorcentaje(minutosCompletados) {
-
+function calcularPorcentaje(
+    minutosCompletados
+) {
     const completados =
         Number(minutosCompletados) || 0;
 
@@ -224,30 +140,22 @@ function calcularPorcentaje(minutosCompletados) {
         (completados / META_MINUTOS) * 100;
 
     const porcentajeLimitado =
-        Math.min(Math.max(porcentaje, 0), 100);
+        Math.min(
+            Math.max(
+                porcentaje,
+                0
+            ),
+            100
+        );
 
     return Number(
         porcentajeLimitado.toFixed(2)
     );
 }
 
-
-// ==========================================
-// CALCULAR TOTAL DE JORNADAS
-// ==========================================
-
-/**
- * Suma los minutos trabajados de
- * todas las jornadas.
- *
- * Espera objetos como:
- *
- * {
- *     minutosTrabajados: 480
- * }
- */
-function calcularTotalJornadas(jornadas) {
-
+function calcularTotalJornadas(
+    jornadas
+) {
     if (!Array.isArray(jornadas)) {
         return 0;
     }
@@ -256,130 +164,80 @@ function calcularTotalJornadas(jornadas) {
         (total, jornada) => {
 
             const minutos =
-                Number(jornada.minutosTrabajados) || 0;
+                Number(
+                    jornada.minutosTrabajados
+                ) || 0;
 
             return total + minutos;
-
         },
         0
     );
 }
 
-
-// ==========================================
-// FORMATEAR PORCENTAJE
-// ==========================================
-
-/**
- * Ejemplos:
- *
- * 10    -> "10%"
- * 14.72 -> "14.72%"
- */
-function formatearPorcentaje(porcentaje) {
-
-    const numero = Number(porcentaje) || 0;
+function formatearPorcentaje(
+    porcentaje
+) {
+    const numero =
+        Number(porcentaje) || 0;
 
     return `${numero}%`;
 }
 
-
-// ==========================================
-// FORMATEAR FECHA
-// ==========================================
-
-/**
- * Convierte:
- *
- * "2026-09-07"
- *
- * en:
- *
- * "07/09/2026"
- *
- * Se hace manualmente para evitar
- * problemas de zona horaria con Date.
- */
 function formatearFecha(fecha) {
-
     if (!fecha) {
         return "";
     }
 
-    const partes = fecha.split("-");
+    const partes =
+        fecha.split("-");
 
     if (partes.length !== 3) {
         return fecha;
     }
 
-    const [anio, mes, dia] = partes;
+    const [anio, mes, dia] =
+        partes;
 
     return `${dia}/${mes}/${anio}`;
 }
 
-
-// ==========================================
-// VALIDAR JORNADA
-// ==========================================
-
-/**
- * Realiza las validaciones principales
- * antes de guardar una jornada.
- *
- * Devuelve:
- *
- * {
- *     valida: true,
- *     mensaje: ""
- * }
- *
- * o:
- *
- * {
- *     valida: false,
- *     mensaje: "..."
- * }
- */
 function validarJornada(
     fecha,
     entrada,
     salida,
     descansoMinutos = 0
 ) {
-
     if (!fecha) {
-
         return {
             valida: false,
-            mensaje: "Debes seleccionar una fecha."
+            mensaje:
+                "Debes seleccionar una fecha."
         };
     }
-
 
     if (!entrada) {
-
         return {
             valida: false,
-            mensaje: "Debes indicar la hora de entrada."
+            mensaje:
+                "Debes indicar la hora de entrada."
         };
     }
-
 
     if (!salida) {
-
         return {
             valida: false,
-            mensaje: "Debes indicar la hora de salida."
+            mensaje:
+                "Debes indicar la hora de salida."
         };
     }
 
-
     const minutosJornada =
-        calcularMinutos(entrada, salida);
-
+        calcularMinutos(
+            entrada,
+            salida
+        );
 
     if (minutosJornada <= 0) {
-
         return {
             valida: false,
             mensaje:
@@ -387,13 +245,10 @@ function validarJornada(
         };
     }
 
-
     const descanso =
         Number(descansoMinutos) || 0;
 
-
     if (descanso < 0) {
-
         return {
             valida: false,
             mensaje:
@@ -401,9 +256,7 @@ function validarJornada(
         };
     }
 
-
     if (descanso >= minutosJornada) {
-
         return {
             valida: false,
             mensaje:
@@ -411,9 +264,350 @@ function validarJornada(
         };
     }
 
-
     return {
         valida: true,
         mensaje: ""
+    };
+}
+
+function crearFechaLocal(fechaTexto) {
+    if (!fechaTexto) {
+        return null;
+    }
+
+    const partes =
+        fechaTexto
+            .split("-")
+            .map(Number);
+
+    if (partes.length !== 3) {
+        return null;
+    }
+
+    const [
+        anio,
+        mes,
+        dia
+    ] = partes;
+
+    return new Date(
+        anio,
+        mes - 1,
+        dia,
+        12,
+        0,
+        0,
+        0
+    );
+}
+
+function convertirFechaATexto(
+    fecha
+) {
+    const anio =
+        fecha.getFullYear();
+
+    const mes =
+        String(
+            fecha.getMonth() + 1
+        ).padStart(2, "0");
+
+    const dia =
+        String(
+            fecha.getDate()
+        ).padStart(2, "0");
+
+    return `${anio}-${mes}-${dia}`;
+}
+
+function calcularPromedioJornada(
+    jornadas
+) {
+    if (
+        !Array.isArray(jornadas) ||
+        jornadas.length === 0
+    ) {
+        return 0;
+    }
+
+    const total =
+        calcularTotalJornadas(
+            jornadas
+        );
+
+    return Math.round(
+        total / jornadas.length
+    );
+}
+
+function calcularPromediosPorDiaSemana(
+    jornadas
+) {
+    const dias = {};
+
+    if (!Array.isArray(jornadas)) {
+        return dias;
+    }
+
+    jornadas.forEach(
+        jornada => {
+
+            const fecha =
+                crearFechaLocal(
+                    jornada.fecha
+                );
+
+            if (!fecha) {
+                return;
+            }
+
+            const diaSemana =
+                fecha.getDay();
+
+            const minutos =
+                Number(
+                    jornada.minutosTrabajados
+                ) || 0;
+
+            if (minutos <= 0) {
+                return;
+            }
+
+            if (!dias[diaSemana]) {
+                dias[diaSemana] = {
+                    total: 0,
+                    cantidad: 0,
+                    promedio: 0
+                };
+            }
+
+            dias[diaSemana].total +=
+                minutos;
+
+            dias[diaSemana].cantidad +=
+                1;
+        }
+    );
+
+    Object.keys(
+        dias
+    ).forEach(
+        dia => {
+
+            dias[dia].promedio =
+                Math.round(
+                    dias[dia].total /
+                    dias[dia].cantidad
+                );
+        }
+    );
+
+    return dias;
+}
+
+function obtenerUltimaFecha(
+    jornadas
+) {
+    if (
+        !Array.isArray(jornadas) ||
+        jornadas.length === 0
+    ) {
+        return null;
+    }
+
+    const fechas =
+        jornadas
+            .map(
+                jornada =>
+                    jornada.fecha
+            )
+            .filter(Boolean)
+            .sort();
+
+    return fechas[
+        fechas.length - 1
+    ] || null;
+}
+
+function obtenerDiasLaborablesDetectados(
+    jornadas
+) {
+    const promedios =
+        calcularPromediosPorDiaSemana(
+            jornadas
+        );
+
+    return Object.keys(
+        promedios
+    )
+        .map(Number)
+        .sort(
+            (a, b) => a - b
+        );
+}
+
+function obtenerNombresDiasLaborables(
+    jornadas
+) {
+    const nombres = [
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado"
+    ];
+
+    const dias =
+        obtenerDiasLaborablesDetectados(
+            jornadas
+        );
+
+    return dias.map(
+        dia =>
+            nombres[dia]
+    );
+}
+
+function estimarFechaFinalizacion(
+    jornadas
+) {
+    if (
+        !Array.isArray(jornadas) ||
+        jornadas.length === 0
+    ) {
+        return null;
+    }
+
+    const totalMinutos =
+        calcularTotalJornadas(
+            jornadas
+        );
+
+    let restantes =
+        calcularRestantes(
+            totalMinutos
+        );
+
+    if (restantes <= 0) {
+        const ultimaFecha =
+            obtenerUltimaFecha(
+                jornadas
+            );
+
+        return {
+            fecha:
+                ultimaFecha,
+
+            jornadasRestantes:
+                0,
+
+            diasLaborables:
+                obtenerNombresDiasLaborables(
+                    jornadas
+                )
+        };
+    }
+
+    const promedios =
+        calcularPromediosPorDiaSemana(
+            jornadas
+        );
+
+    const diasLaborables =
+        Object.keys(
+            promedios
+        );
+
+    if (
+        diasLaborables.length === 0
+    ) {
+        return null;
+    }
+
+    const ultimaFechaTexto =
+        obtenerUltimaFecha(
+            jornadas
+        );
+
+    const ultimaFecha =
+        crearFechaLocal(
+            ultimaFechaTexto
+        );
+
+    const hoy =
+        new Date();
+
+    hoy.setHours(
+        12,
+        0,
+        0,
+        0
+    );
+
+    let fechaActual;
+
+    if (
+        ultimaFecha &&
+        ultimaFecha > hoy
+    ) {
+        fechaActual =
+            new Date(
+                ultimaFecha
+            );
+    } else {
+        fechaActual =
+            new Date(
+                hoy
+            );
+    }
+
+    let jornadasRestantes =
+        0;
+
+    let seguridad =
+        0;
+
+    while (
+        restantes > 0 &&
+        seguridad < 3650
+    ) {
+        fechaActual.setDate(
+            fechaActual.getDate() + 1
+        );
+
+        const diaSemana =
+            fechaActual.getDay();
+
+        const datosDia =
+            promedios[diaSemana];
+
+        if (datosDia) {
+            restantes -=
+                datosDia.promedio;
+
+            jornadasRestantes++;
+        }
+
+        seguridad++;
+    }
+
+    if (restantes > 0) {
+        return null;
+    }
+
+    return {
+        fecha:
+            convertirFechaATexto(
+                fechaActual
+            ),
+
+        jornadasRestantes,
+
+        diasLaborables:
+            obtenerNombresDiasLaborables(
+                jornadas
+            )
     };
 }

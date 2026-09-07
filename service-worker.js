@@ -1,4 +1,4 @@
-const CACHE_NAME = "control-horas-v1";
+const CACHE_NAME = "control-horas-v2";
 
 const ARCHIVOS_CACHE = [
     "./",
