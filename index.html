@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Control de horas de pasantía"
+    >
+
+    <meta name="theme-color" content="#2563eb">
+    <title>Control de Pasantía</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+
+    <!-- =========================
+         ENCABEZADO
+    ========================== -->
+    <header class="header">
+        <div class="container">
+            <h1>Control de Pasantía</h1>
+            <p>Registro y seguimiento de horas</p>
+        </div>
+    </header>
+
+
+    <!-- =========================
+         CONTENIDO PRINCIPAL
+    ========================== -->
+    <main class="container">
+
+        <!-- =====================
+             RESUMEN
+        ====================== -->
+        <section class="resumen">
+
+            <h2>Mi progreso</h2>
+
+            <div class="resumen-grid">
+
+                <article class="resumen-card">
+                    <span class="resumen-label">
+                        Completadas
+                    </span>
+
+                    <strong id="horas-completadas">
+                        0 h
+                    </strong>
+                </article>
+
+
+                <article class="resumen-card">
+                    <span class="resumen-label">
+                        Faltantes
+                    </span>
+
+                    <strong id="horas-faltantes">
+                        180 h
+                    </strong>
+                </article>
+
+
+                <article class="resumen-card">
+                    <span class="resumen-label">
+                        Meta
+                    </span>
+
+                    <strong>
+                        180 h
+                    </strong>
+                </article>
+
+            </div>
+
+
+            <!-- Barra de progreso -->
+            <div class="progreso">
+
+                <div class="progreso-info">
+                    <span>Progreso</span>
+
+                    <span id="porcentaje-progreso">
+                        0%
+                    </span>
+                </div>
+
+                <div
+                    class="barra-progreso"
+                    role="progressbar"
+                    aria-label="Progreso de la pasantía"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="0"
+                >
+                    <div
+                        id="barra-progreso"
+                        class="barra-progreso-completado"
+                    ></div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================
+             REGISTRAR JORNADA
+        ====================== -->
+        <section class="registro">
+
+            <h2>Registrar jornada</h2>
+
+            <form id="form-jornada">
+
+                <!-- Fecha -->
+                <div class="form-group">
+
+                    <label for="fecha">
+                        Fecha
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fecha"
+                        name="fecha"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Horarios -->
+                <div class="horarios">
+
+                    <div class="form-group">
+
+                        <label for="entrada">
+                            Hora de entrada
+                        </label>
+
+                        <input
+                            type="time"
+                            id="entrada"
+                            name="entrada"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="salida">
+                            Hora de salida
+                        </label>
+
+                        <input
+                            type="time"
+                            id="salida"
+                            name="salida"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Descanso -->
+                <div class="descanso-container">
+
+                    <label class="checkbox-label">
+
+                        <input
+                            type="checkbox"
+                            id="descontar-descanso"
+                            name="descontar-descanso"
+                        >
+
+                        Descontar tiempo de descanso
+
+                    </label>
+
+
+                    <div
+                        id="campo-descanso"
+                        class="form-group"
+                        hidden
+                    >
+
+                        <label for="descanso">
+                            Duración del descanso
+                        </label>
+
+                        <input
+                            type="time"
+                            id="descanso"
+                            name="descanso"
+                            value="01:00"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Observación -->
+                <div class="form-group">
+
+                    <label for="observacion">
+                        Observación
+                    </label>
+
+                    <textarea
+                        id="observacion"
+                        name="observacion"
+                        rows="3"
+                        maxlength="250"
+                        placeholder="Ej. Soporte técnico, mantenimiento de equipos..."
+                    ></textarea>
+
+                </div>
+
+
+                <!-- Vista previa -->
+                <div
+                    id="vista-previa"
+                    class="vista-previa"
+                    hidden
+                >
+
+                    <span>Horas de esta jornada</span>
+
+                    <strong id="horas-jornada">
+                        0 h
+                    </strong>
+
+                </div>
+
+
+                <!-- Botones -->
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        id="btn-guardar"
+                    >
+                        Guardar jornada
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="btn-cancelar"
+                        hidden
+                    >
+                        Cancelar edición
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- =====================
+             HISTORIAL
+        ====================== -->
+        <section class="historial">
+
+            <div class="historial-header">
+
+                <div>
+                    <h2>Historial</h2>
+
+                    <p>
+                        Jornadas registradas
+                    </p>
+                </div>
+
+                <span id="cantidad-jornadas">
+                    0 jornadas
+                </span>
+
+            </div>
+
+
+            <!-- Mensaje cuando no hay registros -->
+            <div
+                id="sin-registros"
+                class="sin-registros"
+            >
+                <p>
+                    Todavía no has registrado ninguna jornada.
+                </p>
+            </div>
+
+
+            <!-- Tabla -->
+            <div
+                id="tabla-container"
+                class="tabla-container"
+                hidden
+            >
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Entrada</th>
+                            <th>Salida</th>
+                            <th>Descanso</th>
+                            <th>Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabla-jornadas">
+
+                        <!--
+                            JavaScript insertará
+                            las jornadas aquí.
+                        -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         NOTIFICACIÓN
+    ========================== -->
+    <div
+        id="notificacion"
+        class="notificacion"
+        role="status"
+        aria-live="polite"
+        hidden
+    ></div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+    <footer class="footer">
+
+        <div class="container">
+            <p>
+                Control de horas de pasantía
+            </p>
+        </div>
+
+    </footer>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script src="js/calculations.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
